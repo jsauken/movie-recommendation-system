@@ -17,9 +17,11 @@ Source: GroupLens Research
 - Evaluation metric: RMSE
 
 ## How to Run
-1. Install dependencies:
-```bash
+
+
 python -m venv .venv
 pip install -r requirements.txt
+python src/train_recommender.py
+
 
 

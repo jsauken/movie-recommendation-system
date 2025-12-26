@@ -17,7 +17,7 @@ from config import (
     RANDOM_STATE
 )
 from data_utils import load_raw_data, preprocess_ratings, merge_ratings_movies
-
+    
 
 def run_eda(ratings_movies: pd.DataFrame):
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -107,6 +107,14 @@ def recommend_movies(model, ratings_clean, movies, user_id: int, n: int = 10) ->
 
 
 def main():
+    # 1. Load data
+    # 2. Preprocess
+    # 3. EDA
+    # 4. Baseline model
+    # 5. Improved model (SVD)
+    # 6. Compare models
+    # 7. Recommendations
+
     # Create dirs
     DATA_PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -146,6 +154,16 @@ def main():
     print("\n=== Model Results ===")
     print(results.to_string(index=False))
 
+    plt.figure()
+    plt.bar(results["Model"], results["RMSE"])
+    plt.ylabel("RMSE (lower is better)")
+    plt.title("Model Performance Comparison")
+    plt.xticks(rotation=20, ha="right")
+    plt.tight_layout()
+
+    plt.savefig(RESULTS_DIR / "model_comparison.png")
+    plt.show()
+
     # Example recommendations (save to csv)
     # Picking a random user
     example_user = random.choice(ratings_clean["userId"].unique())
@@ -154,7 +172,44 @@ def main():
 
     print(f"\nTop recommendations for user {example_user}:")
     print(recs[["title", "pred_rating"]].head(10).to_string(index=False))
+    print(f"\nTop recommendations for user {example_user}:")
+    print(recs[["title", "pred_rating"]].head(10).to_string(index=False))
 
+    # -----------------------------
+    # Interactive demo (ASK USER)
+    # -----------------------------
+    while True:
+        min_user = int(ratings_clean["userId"].min())
+        max_user = int(ratings_clean["userId"].max())
+        print(f"\nYou can enter a userId between {min_user} and {max_user}")
+        user_input = input("\nEnter userId for recommendations (or 'q' to quit): ").strip()
+
+        if user_input.lower() == "q":
+            print("Exiting recommendation demo.")
+            break
+
+        try:
+            user_id = int(user_input)
+        except ValueError:
+            print("Please enter a valid numeric userId.")
+            continue
+
+        if user_id not in set(ratings_clean["userId"].unique()):
+            print("User not found in dataset.")
+            continue
+
+        n_str = input("How many recommendations? (default 10): ").strip()
+        n = int(n_str) if n_str.isdigit() else 10
+
+        recs_user = recommend_movies(
+            svd_model,
+            ratings_clean,
+            movies,
+            user_id=user_id,
+            n=n
+        )
+
+        print(recs_user[["title", "genres", "pred_rating"]].to_string(index=False))
 
 if __name__ == "__main__":
     main()
