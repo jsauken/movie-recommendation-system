@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import random
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
@@ -146,7 +147,8 @@ def main():
     print(results.to_string(index=False))
 
     # Example recommendations (save to csv)
-    example_user = int(ratings_clean["userId"].iloc[0])
+    # Picking a random user
+    example_user = random.choice(ratings_clean["userId"].unique())
     recs = recommend_movies(svd_model, ratings_clean, movies, user_id=example_user, n=10)
     recs.to_csv(RESULTS_DIR / "sample_recommendations.csv", index=False)
 

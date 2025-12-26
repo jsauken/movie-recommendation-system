@@ -1,8 +1,7 @@
 # Movie Recommendation System Using Collaborative Filtering
 
 ## Overview
-This project implements a movie recommendation system using collaborative filtering techniques.
-The system predicts user preferences and recommends movies based on historical ratings.
+This project implements a movie recommendation system using collaborative filtering techniques. The system analyzes historical user–movie rating data to predict user preferences and generate personalized movie recommendations. A baseline model is compared with a matrix factorization-based collaborative filtering approach, and model performance is evaluated using RMSE.
 
 ## Dataset
 MovieLens dataset:
@@ -20,6 +19,7 @@ Source: GroupLens Research
 ## How to Run
 1. Install dependencies:
 ```bash
+python -m venv .venv
 pip install -r requirements.txt
 
 
